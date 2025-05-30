@@ -3,11 +3,33 @@ import os
 import subprocess
 import sys
 
+def instalar_pip():
+    """Instala o pip se não estiver presente no sistema."""
+    try:
+        print("🔄 Instalando o pip...")
+        subprocess.call(["apt", "update"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.call(["apt", "install", "-y", "python3-pip"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception as e:
+        print(f"❌ Erro ao tentar instalar o pip: {e}")
+        sys.exit(1)
+
 # Função para instalar pacotes automaticamente
 def instalar_pacotes():
+    """Instala pacotes Python necessários."""
     pacotes = ["psutil"]
-    for pacote in pacotes:
-        subprocess.call([sys.executable, "-m", "pip", "install", "--quiet", pacote])
+    try:
+        for pacote in pacotes:
+            print(f"🔄 Instalando o pacote {pacote}...")
+            subprocess.call([sys.executable, "-m", "pip", "install", "--quiet", pacote, "--break-system-packages"])
+    except Exception as e:
+        print(f"❌ Erro ao tentar instalar pacotes: {e}")
+        sys.exit(1)
+
+# Verifica se o pip está instalado e o instala se necessário
+try:
+    subprocess.call([sys.executable, "-m", "pip", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+except FileNotFoundError:
+    instalar_pip()
 
 # Instalar pacotes necessários
 instalar_pacotes()
@@ -48,7 +70,7 @@ def obter_conexoes():
     return contagem_ips
 
 def exibir_banner():
-    print(f"{AZUL}{NEGRITO}🔍 Monitorando possíveis ataques DoS...{RESET}")
+    print(f"{AZUL}{NEGRITO}🔍 Monitorando Conexões...{RESET}")
 
 def exibir_alerta(ip, total):
     print(f"{VERMELHO}{NEGRITO}⚠️  ALTA ATIVIDADE: {ip} com {total} conexões simultâneas suspeitas.{RESET}")
