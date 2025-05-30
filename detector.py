@@ -1,52 +1,10 @@
 #!/usr/bin/env python3
-import os
-import subprocess
-import sys
-
-def instalar_pip():
-    """Instala o pip se não estiver presente no sistema."""
-    try:
-        print("🔄 Instalando o pip...")
-        subprocess.call(["apt", "update"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.call(["apt", "install", "-y", "python3-pip"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except Exception as e:
-        print(f"❌ Erro ao tentar instalar o pip: {e}")
-        sys.exit(1)
-
-def verificar_pacote(pacote):
-    """Verifica se um pacote Python está instalado."""
-    try:
-        subprocess.call([sys.executable, "-m", "pip", "show", pacote], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return True
-    except FileNotFoundError:
-        return False
-
-# Função para instalar pacotes automaticamente
-def instalar_pacotes():
-    """Instala pacotes Python necessários."""
-    pacotes = ["psutil"]
-    try:
-        for pacote in pacotes:
-            if not verificar_pacote(pacote):
-                print(f"🔄 Instalando o pacote {pacote}...")
-                subprocess.call([sys.executable, "-m", "pip", "install", "--quiet", pacote, "--break-system-packages"])
-    except Exception as e:
-        print(f"❌ Erro ao tentar instalar pacotes: {e}")
-        sys.exit(1)
-
-# Verifica se o pip está instalado e o instala se necessário
-try:
-    subprocess.call([sys.executable, "-m", "pip", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-except FileNotFoundError:
-    instalar_pip()
-
-# Instalar pacotes necessários
-instalar_pacotes()
-
 import psutil
 import time
 from datetime import datetime
 from collections import defaultdict
+import os
+import subprocess
 
 # ================= CONFIGURAÇÕES ================= #
 LIMITE_CONEXOES = 100
