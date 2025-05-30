@@ -13,14 +13,23 @@ def instalar_pip():
         print(f"❌ Erro ao tentar instalar o pip: {e}")
         sys.exit(1)
 
+def verificar_pacote(pacote):
+    """Verifica se um pacote Python está instalado."""
+    try:
+        subprocess.call([sys.executable, "-m", "pip", "show", pacote], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return True
+    except FileNotFoundError:
+        return False
+
 # Função para instalar pacotes automaticamente
 def instalar_pacotes():
     """Instala pacotes Python necessários."""
     pacotes = ["psutil"]
     try:
         for pacote in pacotes:
-            print(f"🔄 Instalando o pacote {pacote}...")
-            subprocess.call([sys.executable, "-m", "pip", "install", "--quiet", pacote, "--break-system-packages"])
+            if not verificar_pacote(pacote):
+                print(f"🔄 Instalando o pacote {pacote}...")
+                subprocess.call([sys.executable, "-m", "pip", "install", "--quiet", pacote, "--break-system-packages"])
     except Exception as e:
         print(f"❌ Erro ao tentar instalar pacotes: {e}")
         sys.exit(1)
