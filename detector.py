@@ -46,7 +46,7 @@ def exibir_alerta(ip, total):
         bloquear_ip(ip)
 
 def exibir_status():
-    agora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    agora = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
     print(f"{AMARELO}📡 {agora} - Verificando conexões...{RESET}")
 
 def registrar_log(ip, total):
